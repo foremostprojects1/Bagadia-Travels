@@ -16,7 +16,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000","http://localhost:5173","http://localhost:4000","https://www.bagadiatravels.com"],
+    origin: ["http://localhost:3000","http://localhost:5173","http://localhost:4000","https://www.bagadiatravels.com","https://bagadia-travels.netlify.app"],
     credentials: true
   })
 );
