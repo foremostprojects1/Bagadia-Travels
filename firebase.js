@@ -5,12 +5,12 @@ import { initializeApp } from "firebase/app";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDC8BeWYfReiG5iN0d_X2Z8ZE3m60Q7j1M",
-  authDomain: "bagadia-tours.firebaseapp.com",
-  projectId: "bagadia-tours",
-  storageBucket: "bagadia-tours.appspot.com",
-  messagingSenderId: "461410099251",
-  appId: "1:461410099251:web:78c9d67376140c70b7c346"
+  apiKey: process.env.API_KEY,
+  authDomain: process.env.AUTH_DOMAIN,
+  projectId:  process.env.PROJECT_ID,
+  storageBucket: process.env.STORAGE_BUCKET,
+  messagingSenderId: process.env.MESSAGING_SENDING_ID,
+  appId: process.env.APP_ID,
 };
 
 // Initialize Firebase
