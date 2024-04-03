@@ -7,9 +7,9 @@ import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 import path from "path";
 
-import { fileURLToPath } from 'url';
+// import { fileURLToPath } from 'url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 
@@ -43,11 +43,11 @@ const connectDatabase = () => {
 connectDatabase();
 
 
-app.use(express.static(path.join(__dirname, "/dist")));
+// app.use(express.static(path.join(__dirname, "/dist")));
 
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "/dist/index.html"));
-});
+// app.get("*", (req, res) => {
+//   res.sendFile(path.resolve(__dirname, "/dist/index.html"));
+// });
 
 app.listen(process.env.PORT, () => {
   console.log(`Listening on port ${process.env.PORT}`);
