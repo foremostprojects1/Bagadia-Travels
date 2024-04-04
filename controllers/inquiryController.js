@@ -51,7 +51,7 @@ export const addInquiry = async (req, res) => {
 
     try {
       await sendEmail({
-        email: "bagadiatravels@gmail.com",
+        email: "info@bagadiatravels.com",
         subject: `New Inquiry Submitted`,
         message,
       });
