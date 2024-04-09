@@ -32,7 +32,7 @@ export const addTour = async (req, res) => {
       daysDescription,
       daysTitles,
       country,
-      
+      tourDepartureDate,
       transportMode,
     } = req.body;
     // console.log(req.body)
@@ -105,9 +105,11 @@ export const addTour = async (req, res) => {
       transportMode,
       country,
       modeDetails,
+      tourDepartureDate,
       returnModeDetails
     });
 
+    
     await tour.save();
 
     res.status(200).json({

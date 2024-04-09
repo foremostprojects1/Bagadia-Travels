@@ -48,6 +48,10 @@ const tourModel = new mongoose.Schema({
   tourType: {
     type: String,
   },
+  tourDepartureDate: {
+    type: Date,
+    default: null,
+  },
   daysDescription: [
     {
       type: String,
