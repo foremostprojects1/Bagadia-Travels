@@ -43,7 +43,7 @@ export const addTour = async (req, res) => {
     // Check if images is an array
     if (Array.isArray(images)) {
       imagesArray = images;
-    } else if (typeof images === 'string') {
+    } else if (typeof images === "string") {
       // If images is a string, convert it to an array with a single element
       imagesArray.push(images);
     } else {
@@ -87,7 +87,7 @@ export const addTour = async (req, res) => {
     });
 
     //urls contains all links of download URLs
-    
+
     const tour = new Tour({
       title,
       price,
@@ -106,10 +106,9 @@ export const addTour = async (req, res) => {
       country,
       modeDetails,
       tourDepartureDate,
-      returnModeDetails
+      returnModeDetails,
     });
 
-    
     await tour.save();
 
     res.status(200).json({
@@ -117,7 +116,7 @@ export const addTour = async (req, res) => {
       message: "Tour Created Successfully",
     });
   } catch (e) {
-    console.log("error" + e)
+    console.log("error" + e);
     res.status(400).json({
       message: e.message || "An error occurred",
       success: false,
@@ -126,7 +125,7 @@ export const addTour = async (req, res) => {
 };
 export const updateTour = async (req, res) => {
   try {
-    const tourId = req.params.id; 
+    const tourId = req.params.id;
 
     const {
       title,
@@ -144,11 +143,10 @@ export const updateTour = async (req, res) => {
       daysTitles,
       transportMode,
       country,
-      modeDetails,
-      returnModeDetails,
       tourDepartureDate,
     } = req.body;
-
+    const modeDetails = JSON.parse(req.body.modeDetails);
+    const returnModeDetails = JSON.parse(req.body.returnModeDetails);
     let existingTour;
 
     try {
@@ -162,18 +160,15 @@ export const updateTour = async (req, res) => {
     }
 
     let updatedImages = [];
+    let imagesArray = [];
 
-    // Check if images is an array
     if (Array.isArray(images)) {
       imagesArray = images;
-    } else if (typeof images === 'string') {
-      // If images is a string, convert it to an array with a single element
+    } else if (typeof images === "string") {
       imagesArray.push(images);
     } else {
-      // Handle other cases where images is not an array or a string
       throw new Error("Images must be provided as an array or a string");
     }
-
 
     if (images) {
       const storage = getStorage(firebase);
@@ -203,37 +198,41 @@ export const updateTour = async (req, res) => {
 
       updatedImages = urls;
 
-      // Delete old images if new ones are uploaded
       if (existingTour.images.length > 0) {
-        const deletePromises = existingTour.images.map((imageUrl) => {
-          const imageRef = ref(storage, imageUrl);
-          return deleteObject(imageRef);
-        });
+        existingTour.images.forEach(async (url) => {
+          const desertRef = ref(storage, url);
 
-        await Promise.all(deletePromises);
+          deleteObject(desertRef)
+            .then(() => {})
+            .catch((error) => {});
+        });
       }
     } else {
-      // Use existing images if no new ones are provided
       updatedImages = existingTour.images;
     }
 
     existingTour.title = title || existingTour.title;
+    existingTour.images = updatedImages;
     existingTour.price = price || existingTour.price;
     existingTour.places = places || existingTour.places;
     existingTour.maxPeople = maxPeople || existingTour.maxPeople;
     existingTour.days = days || existingTour.days;
     existingTour.nights = nights || existingTour.nights;
     existingTour.tourType = tourType || existingTour.tourType;
-    existingTour.tourDescription = tourDescription || existingTour.tourDescription;
+    existingTour.tourDescription =
+      tourDescription || existingTour.tourDescription;
     existingTour.included = included || existingTour.included;
     existingTour.excluded = excluded || existingTour.excluded;
-    existingTour.daysDescription = daysDescription || existingTour.daysDescription;
+    existingTour.daysDescription =
+      daysDescription || existingTour.daysDescription;
     existingTour.daysTitles = daysTitles || existingTour.daysTitles;
     existingTour.transportMode = transportMode || existingTour.transportMode;
     existingTour.country = country || existingTour.country;
     existingTour.modeDetails = modeDetails || existingTour.modeDetails;
-    existingTour.returnModeDetails = returnModeDetails || existingTour.returnModeDetails;
-    existingTour.tourDepartureDate = tourDepartureDate || existingTour.tourDepartureDate;
+    existingTour.returnModeDetails =
+      returnModeDetails || existingTour.returnModeDetails;
+    existingTour.tourDepartureDate =
+      tourDepartureDate || existingTour.tourDepartureDate;
 
     await existingTour.save();
 
@@ -328,7 +327,9 @@ export const getToursByName = async (req, res) => {
     const { destination } = req.params;
     // console.log("hello "  + destination)
 
-    const tours = await Tour.find({ title: { $regex: new RegExp(destination, "i") } });
+    const tours = await Tour.find({
+      title: { $regex: new RegExp(destination, "i") },
+    });
 
     // console.log(tours)
     res.status(200).json({
