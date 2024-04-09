@@ -127,7 +127,6 @@ export const addTour = async (req, res) => {
 export const updateTour = async (req, res) => {
   try {
     const tourId = req.params.id; 
-    console.log("Tour id " + tourId);
 
     const {
       title,
@@ -164,13 +163,25 @@ export const updateTour = async (req, res) => {
 
     let updatedImages = [];
 
+    // Check if images is an array
+    if (Array.isArray(images)) {
+      imagesArray = images;
+    } else if (typeof images === 'string') {
+      // If images is a string, convert it to an array with a single element
+      imagesArray.push(images);
+    } else {
+      // Handle other cases where images is not an array or a string
+      throw new Error("Images must be provided as an array or a string");
+    }
+
+
     if (images) {
       const storage = getStorage(firebase);
 
       const uploadPromises = [];
       const downloadURLs = [];
 
-      images.forEach((image, index) => {
+      imagesArray.forEach((image, index) => {
         const base64Data = image.split(",")[1];
         const storageRef = ref(
           storage,
