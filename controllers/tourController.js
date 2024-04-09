@@ -126,7 +126,8 @@ export const addTour = async (req, res) => {
 };
 export const updateTour = async (req, res) => {
   try {
-    const tourId = req.params.id; // Assuming tour ID is retrieved from request parameters
+    const tourId = req.params.id; 
+    console.log("Tour id " + tourId);
 
     const {
       title,
