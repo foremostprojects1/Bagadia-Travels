@@ -124,6 +124,119 @@ export const addTour = async (req, res) => {
     });
   }
 };
+export const updateTour = async (req, res) => {
+  try {
+    const tourId = req.params.id; // Assuming tour ID is retrieved from request parameters
+
+    const {
+      title,
+      price,
+      images,
+      places,
+      maxPeople,
+      days,
+      nights,
+      tourType,
+      tourDescription,
+      included,
+      excluded,
+      daysDescription,
+      daysTitles,
+      transportMode,
+      country,
+      modeDetails,
+      returnModeDetails,
+      tourDepartureDate,
+    } = req.body;
+
+    let existingTour;
+
+    try {
+      existingTour = await Tour.findById(tourId);
+    } catch (error) {
+      console.error("Error fetching tour:", error);
+      return res.status(404).json({
+        message: "Tour not found",
+        success: false,
+      });
+    }
+
+    let updatedImages = [];
+
+    if (images) {
+      const storage = getStorage(firebase);
+
+      const uploadPromises = [];
+      const downloadURLs = [];
+
+      images.forEach((image, index) => {
+        const base64Data = image.split(",")[1];
+        const storageRef = ref(
+          storage,
+          `tours/${generateUniqueFileName()}_${index}.jpg`
+        );
+
+        const uploadPromise = uploadString(storageRef, base64Data, "base64");
+        uploadPromises.push(uploadPromise);
+      });
+
+      const snapshots = await Promise.all(uploadPromises);
+
+      snapshots.forEach((snapshot) => {
+        const downloadURLPromise = getDownloadURL(snapshot.ref);
+        downloadURLs.push(downloadURLPromise);
+      });
+
+      const urls = await Promise.all(downloadURLs);
+
+      updatedImages = urls;
+
+      // Delete old images if new ones are uploaded
+      if (existingTour.images.length > 0) {
+        const deletePromises = existingTour.images.map((imageUrl) => {
+          const imageRef = ref(storage, imageUrl);
+          return deleteObject(imageRef);
+        });
+
+        await Promise.all(deletePromises);
+      }
+    } else {
+      // Use existing images if no new ones are provided
+      updatedImages = existingTour.images;
+    }
+
+    existingTour.title = title || existingTour.title;
+    existingTour.price = price || existingTour.price;
+    existingTour.places = places || existingTour.places;
+    existingTour.maxPeople = maxPeople || existingTour.maxPeople;
+    existingTour.days = days || existingTour.days;
+    existingTour.nights = nights || existingTour.nights;
+    existingTour.tourType = tourType || existingTour.tourType;
+    existingTour.tourDescription = tourDescription || existingTour.tourDescription;
+    existingTour.included = included || existingTour.included;
+    existingTour.excluded = excluded || existingTour.excluded;
+    existingTour.daysDescription = daysDescription || existingTour.daysDescription;
+    existingTour.daysTitles = daysTitles || existingTour.daysTitles;
+    existingTour.transportMode = transportMode || existingTour.transportMode;
+    existingTour.country = country || existingTour.country;
+    existingTour.modeDetails = modeDetails || existingTour.modeDetails;
+    existingTour.returnModeDetails = returnModeDetails || existingTour.returnModeDetails;
+    existingTour.tourDepartureDate = tourDepartureDate || existingTour.tourDepartureDate;
+
+    await existingTour.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Tour Updated Successfully",
+    });
+  } catch (e) {
+    console.error("Error updating tour:", e);
+    res.status(400).json({
+      message: e.message || "An error occurred while updating the tour",
+      success: false,
+    });
+  }
+};
 export const deleteTourById = async (req, res) => {
   try {
     const { id } = req.params;
