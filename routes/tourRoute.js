@@ -4,7 +4,7 @@ import { isAuthenticated } from "../middleware/auth.js";
 
 const tourRoute = express.Router();
 tourRoute.post("/create", addTour);
-tourRoute.put("/update/id", updateTour);
+tourRoute.put("/update/:id", updateTour);
 tourRoute.get("/getTours",getTours);
 tourRoute.get("/getTour/:id",getTourById);
 tourRoute.delete("/deleteTour/:id",deleteTourById);
