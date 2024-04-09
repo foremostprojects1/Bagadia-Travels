@@ -149,7 +149,7 @@ export const updateTour = async (req, res) => {
     const returnModeDetails = JSON.parse(req.body.returnModeDetails);
     let existingTour;
 
-    try {
+    try { 
       existingTour = await Tour.findById(tourId);
     } catch (error) {
       console.error("Error fetching tour:", error);
@@ -158,10 +158,10 @@ export const updateTour = async (req, res) => {
         success: false,
       });
     }
-
+    
     let updatedImages = [];
     let imagesArray = [];
-
+    
     if (Array.isArray(images)) {
       imagesArray = images;
     } else if (typeof images === "string") {
@@ -169,45 +169,57 @@ export const updateTour = async (req, res) => {
     } else {
       throw new Error("Images must be provided as an array or a string");
     }
-
+    
+    
     if (images) {
       const storage = getStorage(firebase);
 
-      const uploadPromises = [];
-      const downloadURLs = [];
+      if (typeof images[0] === "string") { // Check if images are Firebase storage links
+        // Images are already uploaded, use them directly
+        updatedImages = images;
+      } else {
+        // Images are base64, upload them to Firebase Storage
+        const uploadPromises = [];
+        const downloadURLs = [];
 
-      imagesArray.forEach((image, index) => {
-        const base64Data = image.split(",")[1];
-        const storageRef = ref(
-          storage,
-          `tours/${generateUniqueFileName()}_${index}.jpg`
-        );
+        images.forEach((image, index) => {
+          const base64Data = image.split(",")[1];
+          const storageRef = ref(
+            storage,
+            `tours/${generateUniqueFileName()}_${index}.jpg`
+          );
 
-        const uploadPromise = uploadString(storageRef, base64Data, "base64");
-        uploadPromises.push(uploadPromise);
-      });
-
-      const snapshots = await Promise.all(uploadPromises);
-
-      snapshots.forEach((snapshot) => {
-        const downloadURLPromise = getDownloadURL(snapshot.ref);
-        downloadURLs.push(downloadURLPromise);
-      });
-
-      const urls = await Promise.all(downloadURLs);
-
-      updatedImages = urls;
-
-      if (existingTour.images.length > 0) {
-        existingTour.images.forEach(async (url) => {
-          const desertRef = ref(storage, url);
-
-          deleteObject(desertRef)
-            .then(() => {})
-            .catch((error) => {});
+          const uploadPromise = uploadString(storageRef, base64Data, "base64");
+          uploadPromises.push(uploadPromise);
         });
+
+        const snapshots = await Promise.all(uploadPromises);
+
+        snapshots.forEach((snapshot) => {
+          const downloadURLPromise = getDownloadURL(snapshot.ref);
+          downloadURLs.push(downloadURLPromise);
+        });
+
+        const urls = await Promise.all(downloadURLs);
+
+        updatedImages = urls;
+      }
+
+      // Delete old images if new ones are uploaded (excluding unchanged ones)
+      const imagesToDelete = existingTour.images.filter(
+        (url) => !updatedImages.includes(url)
+      );
+
+      if (imagesToDelete.length > 0) {
+        const deletePromises = imagesToDelete.map((url) => {
+          const imageRef = ref(storage, url);
+          return deleteObject(imageRef);
+        });
+
+        await Promise.all(deletePromises);
       }
     } else {
+      // Use existing images if no new ones are provided
       updatedImages = existingTour.images;
     }
 
