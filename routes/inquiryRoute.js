@@ -5,7 +5,7 @@ import { addInquiry, addSmallInquiry, getInquiries, recentInquiries } from "../c
 const userRoute = express.Router();
 userRoute.post("/addInquiry", addInquiry);
 userRoute.post("/addSmallInquiry", addSmallInquiry);
-userRoute.get("/getInquiries",isAuthenticated, getInquiries);
-userRoute.get("/getRecentInquiries",isAuthenticated, recentInquiries);
+userRoute.get("/getInquiries", getInquiries);
+userRoute.get("/getRecentInquiries", recentInquiries);
 
 export default userRoute;
