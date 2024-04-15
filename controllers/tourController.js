@@ -34,10 +34,13 @@ export const addTour = async (req, res) => {
       country,
       tourDepartureDate,
       transportMode,
+      
     } = req.body;
     // console.log(req.body)
     const modeDetails = JSON.parse(req.body.modeDetails);
     const returnModeDetails = JSON.parse(req.body.returnModeDetails);
+    const hotelDetails = JSON.parse(req.body.hotelDetails);
+
     let imagesArray = [];
 
     // Check if images is an array
@@ -107,6 +110,7 @@ export const addTour = async (req, res) => {
       modeDetails,
       tourDepartureDate,
       returnModeDetails,
+      hotelDetails,
     });
 
     await tour.save();
@@ -147,6 +151,7 @@ export const updateTour = async (req, res) => {
     } = req.body;
     const modeDetails = JSON.parse(req.body.modeDetails);
     const returnModeDetails = JSON.parse(req.body.returnModeDetails);
+    const hotelDetails = JSON.parse(req.body.hotelDetails);
     let existingTour;
 
     try { 
@@ -241,6 +246,7 @@ export const updateTour = async (req, res) => {
     existingTour.transportMode = transportMode || existingTour.transportMode;
     existingTour.country = country || existingTour.country;
     existingTour.modeDetails = modeDetails || existingTour.modeDetails;
+    existingTour.hotelDetails = hotelDetails || existingTour.hotelDetails;
     existingTour.returnModeDetails =
       returnModeDetails || existingTour.returnModeDetails;
     existingTour.tourDepartureDate =

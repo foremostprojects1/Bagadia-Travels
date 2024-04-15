@@ -66,6 +66,25 @@ const tourModel = new mongoose.Schema({
     type: String,
     required: [true, "Please provide mode of transportation"],
   },
+  hotelDetails: [
+    {
+      cityName: {
+        type: String,
+      },
+      hotelName: {
+        type: String,
+      },
+      roomType: {
+        type: String,
+      },
+      checkIn: {
+        type: String,
+      },
+      checkOut: {
+        type: String,
+      },
+    },
+  ],
   modeDetails: [
     {
       name: {
