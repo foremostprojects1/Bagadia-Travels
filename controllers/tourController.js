@@ -346,7 +346,7 @@ export const getToursByName = async (req, res) => {
     // console.log("hello "  + destination)
 
     const tours = await Tour.find({
-      title: { $regex: new RegExp(destination, "i") },
+      country: { $regex: new RegExp(destination, "i") },
     });
 
     // console.log(tours)
