@@ -16,7 +16,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000","http://localhost:5173","http://localhost:4000","https://bagadiatravels.com","https://www.bagadiatravels.com","https://bagadia-travels.netlify.app","http://bagadiatravels.com","https://bagadia-travels-frontend.vercel.app","https://www.magicaljourney.co.in"],
+    origin: ["http://localhost:3000","http://localhost:5173","http://localhost:4000","https://bagadiatravels.com","https://www.bagadiatravels.com","https://bagadia-travels.netlify.app","http://bagadiatravels.com","https://bagadia-travels-frontend.vercel.app","https://www.magicaljourney.co.in","https://magicaljourney.co.in","http://magicaljourney.co.in"],
     credentials: true
   })
 );
