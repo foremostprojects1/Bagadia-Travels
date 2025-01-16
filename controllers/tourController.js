@@ -34,7 +34,7 @@ export const addTour = async (req, res) => {
       country,
       tourDepartureDate,
       transportMode,
-      
+      paxData
     } = req.body;
     // console.log(req.body)
     const modeDetails = JSON.parse(req.body.modeDetails);
@@ -111,6 +111,7 @@ export const addTour = async (req, res) => {
       tourDepartureDate,
       returnModeDetails,
       hotelDetails,
+      paxData,
     });
 
     await tour.save();
@@ -148,6 +149,7 @@ export const updateTour = async (req, res) => {
       transportMode,
       country,
       tourDepartureDate,
+      paxData
     } = req.body;
     const modeDetails = JSON.parse(req.body.modeDetails);
     const returnModeDetails = JSON.parse(req.body.returnModeDetails);
@@ -231,6 +233,7 @@ export const updateTour = async (req, res) => {
     existingTour.title = title || existingTour.title;
     existingTour.images = updatedImages;
     existingTour.price = price || existingTour.price;
+    existingTour.paxData = paxData || existingTour.paxData;
     existingTour.places = places || existingTour.places;
     existingTour.maxPeople = maxPeople || existingTour.maxPeople;
     existingTour.days = days || existingTour.days;

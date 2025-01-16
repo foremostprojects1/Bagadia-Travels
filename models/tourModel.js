@@ -15,6 +15,7 @@ const tourModel = new mongoose.Schema({
       required: true,
     },
   ],
+  paxData:{},
   country: {
     type: String,
     required: [true, "Please provide country for tour"],
