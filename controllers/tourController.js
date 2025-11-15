@@ -311,7 +311,7 @@ export const deleteTourById = async (req, res) => {
 
 export const getTours = async (req, res) => {
   try {
-    const tour = await Tour.find({});
+    const tour = await Tour.find({ active: true });
 
     res.status(200).json({
       success: true,
@@ -350,7 +350,9 @@ export const getToursByName = async (req, res) => {
 
     const tours = await Tour.find({
       country: { $regex: new RegExp(destination, "i") },
+      active: true,
     });
+    
 
     // console.log(tours)
     res.status(200).json({
@@ -362,5 +364,30 @@ export const getToursByName = async (req, res) => {
       message: e.message,
       success: false,
     });
+  }
+};
+
+export const toggleTourStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { active } = req.body;
+
+    const tour = await Tour.findByIdAndUpdate(
+      id,
+      { active },
+      { new: true }
+    );
+
+    if (!tour) return res.status(404).json({ message: "Tour not found" });
+
+    return res.status(200).json({
+      message: active
+        ? "Tour activated successfully"
+        : "Tour deactivated successfully",
+      tour,
+    });
+  } catch (err) {
+    console.error("Error updating status:", err);
+    res.status(500).json({ message: "Internal server error" });
   }
 };

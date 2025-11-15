@@ -130,6 +130,10 @@ const tourModel = new mongoose.Schema({
       },
     },
   ],
+  active: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 export default mongoose.model("Tour", tourModel);
