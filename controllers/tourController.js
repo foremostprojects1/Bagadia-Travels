@@ -311,7 +311,23 @@ export const deleteTourById = async (req, res) => {
 
 export const getTours = async (req, res) => {
   try {
-    const tour = await Tour.find({});
+    const tour = await Tour.find({ active: true });
+
+    res.status(200).json({
+      success: true,
+      tour: tour,
+    });
+  } catch (e) {
+    res.status(400).json({
+      message: e,
+      success: false,
+    });
+  }
+};
+
+export const getAllTours = async (req, res) => {
+  try {
+    const tour = await Tour.find();
 
     res.status(200).json({
       success: true,
