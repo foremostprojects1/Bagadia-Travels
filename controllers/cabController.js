@@ -16,6 +16,25 @@ export const addCab = async (req, res) => {
   }
 };
 
+export const getAllCabs = async (req, res) => {
+    try {
+      const cabs = await Cab.find().sort({ createdAt: -1 });
+  
+      return res.status(200).json({
+        success: true,
+        message: "Cabs fetched successfully",
+        total: cabs.length,
+        data: cabs,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  };
+  
+
 export const updateCab = async (req, res) => {
   try {
     const { id } = req.params;
