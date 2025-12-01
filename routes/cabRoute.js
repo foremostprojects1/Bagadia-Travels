@@ -4,7 +4,7 @@ import {
   updateCab,
   deleteCab,
   toggleCabStatus,
-} from "../controllers/cab.controller.js";
+} from "../controllers/cabController.js";
 
 const router = express.Router();
 

@@ -1,4 +1,4 @@
-import Cab from "../models/cab.model.js";
+import Cab from "../models/cabModel.js";
 
 export const addCab = async (req, res) => {
   try {
