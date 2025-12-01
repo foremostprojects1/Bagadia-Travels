@@ -17,23 +17,40 @@ export const addCab = async (req, res) => {
 };
 
 export const getAllCabs = async (req, res) => {
-    try {
-      const cabs = await Cab.find().sort({ createdAt: -1 });
-  
-      return res.status(200).json({
-        success: true,
-        message: "Cabs fetched successfully",
-        total: cabs.length,
-        data: cabs,
-      });
-    } catch (error) {
-      return res.status(500).json({
-        success: false,
-        message: error.message,
-      });
-    }
-  };
-  
+  try {
+    const cabs = await Cab.find().sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      message: "Cabs fetched successfully",
+      total: cabs.length,
+      data: cabs,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const getActiveCabs = async (req, res) => {
+  try {
+    const cabs = await Cab.find({active:true}).sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      message: "Cabs fetched successfully",
+      total: cabs.length,
+      data: cabs,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 export const updateCab = async (req, res) => {
   try {
@@ -91,11 +108,7 @@ export const toggleCabStatus = async (req, res) => {
     const { id } = req.params;
     const { active } = req.body;
 
-    const cab = await Cab.findByIdAndUpdate(
-      id,
-      { active },
-      { new: true }
-    );
+    const cab = await Cab.findByIdAndUpdate(id, { active }, { new: true });
 
     if (!cab) {
       return res.status(404).json({
