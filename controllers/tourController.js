@@ -32,7 +32,6 @@ export const addTour = async (req, res) => {
       daysDescription,
       daysTitles,
       country,
-      tourDepartureDate,
       transportMode,
     } = req.body;
     // console.log(req.body)
@@ -40,6 +39,7 @@ export const addTour = async (req, res) => {
     const returnModeDetails = JSON.parse(req.body.returnModeDetails);
     const hotelDetails = JSON.parse(req.body.hotelDetails);
     const paxData = JSON.parse(req.body.paxData);
+    const tourDepartureDate = JSON.parse(req.body.tourDepartureDate);
 
     let imagesArray = [];
 
@@ -148,12 +148,13 @@ export const updateTour = async (req, res) => {
       daysTitles,
       transportMode,
       country,
-      tourDepartureDate,
     } = req.body;
     const modeDetails = JSON.parse(req.body.modeDetails);
     const returnModeDetails = JSON.parse(req.body.returnModeDetails);
     const hotelDetails = JSON.parse(req.body.hotelDetails);
     const paxData = JSON.parse(req.body.paxData);
+    const tourDepartureDate = JSON.parse(req.body.tourDepartureDate);
+
     let existingTour;
 
     try { 

@@ -50,9 +50,9 @@ const tourModel = new mongoose.Schema({
     type: String,
   },
   tourDepartureDate: {
-    type: Date,
-    default: null,
-  },
+    type: [Date],
+    default: [],
+  },  
   daysDescription: [
     {
       type: String,
